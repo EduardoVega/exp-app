@@ -1,0 +1,9 @@
+---
+- hosts: all
+  become: true
+  tasks:
+  - import_role:
+      name: tomcat
+    vars:
+      managerpasswd: "{{ lookup('env', 'TOMCAT_MANAGER_PASSWD') }}"
+      deployerpasswd: "{{ lookup('env', 'TOMCAT_DEPLOYER_PASSWD') }}"

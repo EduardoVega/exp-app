@@ -1,0 +1,52 @@
+{
+    "variables": {
+      "name": "{{env `AMI_NAME`}}",
+      "region": "{{env `AWS_REGION`}}",
+      "subnet_id": "{{env `AWS_SUBNET_ID`}}",
+      "access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+      "secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}"
+    },
+    "sensitive-variables": [
+      "access_key",
+      "secret_key",
+      "account_file"
+    ],
+    "builders": [
+      {
+        "name": "aws",
+        "type": "amazon-ebs",
+        "access_key": "{{user `access_key`}}",
+        "secret_key": "{{user `secret_key`}}",
+        "ami_name": "{{user `name`}}",
+        "region": "{{user `region`}}",
+        "instance_type": "t2.micro",
+        "ssh_username": "centos",
+        "subnet_id": "{{user `subnet_id`}}",
+        "run_tags": {
+          "Name": "{{user `name`}}"
+        },
+        "tags": {
+          "OS_Version": "CentOS 7 (x86_64)",
+          "Base_AMI_Name": "{{ .SourceAMIName }}"
+        },
+        "source_ami_filter": {
+          "filters": {
+            "owner-alias": "aws-marketplace",
+            "product-code": "aw0evgkw8e5c1q413zgy5pjce",
+            "virtualization-type": "hvm"
+          },
+          "owners": [
+            "aws-marketplace"
+          ],
+          "most_recent": true
+        }
+      }
+    ],
+    "provisioners": [
+      {
+        "type": "ansible",
+        "playbook_file": "../tomcat-ansible/run.yaml",
+        "sftp_command": "/usr/libexec/openssh/sftp-server -e"
+      }
+    ]
+  }

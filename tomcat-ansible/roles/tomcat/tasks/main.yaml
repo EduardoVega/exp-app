@@ -1,0 +1,99 @@
+- name: Ensure epel-release repository exists
+  yum:
+    name: epel-release
+    state: present
+
+- name: Ensure java exists
+  yum:
+    name: java-1.8.0-openjdk.x86_64
+    state: present
+
+- name: Ensure group tomcat exists
+  group:
+    name: tomcat
+    state: present
+
+- name: Ensure directory /opt/tomcat exists
+  file:
+    path: /opt/tomcat
+    state: directory
+
+- name: Ensure user tomcat exists
+  user:
+    name: tomcat
+    group: tomcat
+    shell: /bin/nologin
+    home: /opt/tomcat
+    state: present
+
+- name: Ensure app tomcat exists
+  unarchive:
+    src: https://downloads.apache.org/tomcat/tomcat-8/v8.5.54/bin/apache-tomcat-8.5.54.tar.gz
+    dest: /opt/tomcat
+    remote_src: yes
+    extra_opts:
+    - --strip-components=1
+
+- name: Ensure tomcat manager can be accessed from anywhere
+  copy:
+    src: context.xml
+    dest: /opt/tomcat/webapps/manager/META-INF/context.xml
+
+- name: Ensure tomcat users exist
+  template:
+    src: tomcat-users.j2
+    dest: /opt/tomcat/conf/tomcat-users.xml
+
+- name: Ensure tomcat group for
+  file:
+    path: "{{ item }}"
+    state: directory
+    group: tomcat
+    recurse: true
+  with_items:
+    - /opt/tomcat/conf
+    - /opt/tomcat/bin
+    - /opt/tomcat/lib
+
+- name: Ensure g+rwx permissions for
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: g+rwx
+  with_items:
+    - /opt/tomcat/conf
+    - /opt/tomcat/bin
+
+- name: Ensure g+r permissions for
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: g+r
+    recurse: true
+  with_items:
+    - /opt/tomcat/conf
+    - /opt/tomcat/bin
+
+- name: Ensure tomcat owner for
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: tomcat
+    recurse: true
+  with_items:
+    - /opt/tomcat/logs
+    - /opt/tomcat/temp
+    - /opt/tomcat/webapps
+    - /opt/tomcat/work
+
+- name: Ensure tomcat.service exists
+  copy:
+    src: tomcat.service
+    dest: /etc/systemd/system/tomcat.service
+    mode: '0644'
+
+- name: Ensure tomcat service is started and enabled
+  service:
+    name: tomcat
+    state: started
+    enabled: yes
