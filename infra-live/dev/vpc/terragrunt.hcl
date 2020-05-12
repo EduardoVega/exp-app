@@ -1,5 +1,5 @@
 terraform {
-  source = "git@github.com:EduardoVega/exp-app.git//infra-modules/vpc?ref=v1.0.0"
+  source = "git@github.com:EduardoVega/exp-app.git//infra-modules/vpc?ref=v1.1.0"
 }
 
 include {

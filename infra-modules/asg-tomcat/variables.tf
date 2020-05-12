@@ -13,7 +13,7 @@ variable "ec2-instance-type" {
     description = "EC2 Instance Type"
 }
 
-variable "ami-id" {
+variable "ami" {
     type    = string
     description = "Tomcat AMI ID"
 }

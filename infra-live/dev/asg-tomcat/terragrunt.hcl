@@ -1,5 +1,5 @@
 terraform {
-  source = "git@github.com:EduardoVega/exp-app.git//infra-modules/asg-tomcat?ref=v1.0.0"
+  source = "git@github.com:EduardoVega/exp-app.git//infra-modules/asg-tomcat?ref=v1.1.0"
 }
 
 include {
@@ -17,7 +17,6 @@ inputs = {
     load-balancer-subnet-ids = dependency.vpc.outputs.public-subnet-ids
     tomcat-subnet-ids = dependency.vpc.outputs.private-subnet-ids
     ec2-instance-type = "t2.micro"
-    ami-id = "ami-06e42f59e492fb126"
     aws-region = "us-east-1"
     project-name = "exp-app"
     key-name = "ec2-vms"

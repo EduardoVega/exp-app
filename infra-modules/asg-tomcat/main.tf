@@ -37,7 +37,7 @@ resource "aws_lb_listener" "lb" {
 
 resource "aws_launch_configuration" "tomcat" {
   associate_public_ip_address = false
-  image_id                    = var.ami-id
+  image_id                    = var.ami
   instance_type               = var.ec2-instance-type
   name_prefix                 = "tomcat-${var.project-name}-"
   security_groups             = [var.tomcat-security-group-id]
